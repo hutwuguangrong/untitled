@@ -71,4 +71,4 @@ class get_token(Resource):
             'message': 'ok'
         })
 
-
+# scp 文件名 远程主机用户名@liyafeng,com:/
