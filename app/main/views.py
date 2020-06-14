@@ -8,5 +8,5 @@ from app import api
 class index(Resource):
     def get(self):
         return jsonify({
-            'message': '登录成功！'
+            'message': '登录成功！！'
         })
