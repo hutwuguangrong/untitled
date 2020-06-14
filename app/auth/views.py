@@ -76,13 +76,16 @@ class get_token(Resource):
 
 @api.route('/api/auth/login')
 class login(Resource):
-    """
-    登录
-    :receive:
-    email：邮箱
-    password：密码
-    """
     def post(self):
+        """
+        登录
+        :receive:
+        email：邮箱
+        password：密码
+        :return:
+        密码正确跳转到其他页面
+        密码错误提示密码错误
+        """
         email = request.values.get('email')
         password = request.values.get('password')
         user = User.query.filter_by(email=email).first()
