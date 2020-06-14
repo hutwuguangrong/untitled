@@ -1,9 +1,10 @@
 import os
 from flask import Flask
+from flask_migrate import Migrate, upgrade
 
 from .config import config
 from .extentions import db, email, login_manager, api
-from .models import User
+from .models import User, Goods, Agent
 
 
 def create_app(config_name=None):
@@ -18,12 +19,17 @@ def create_app(config_name=None):
     register_extensions(app)
     register_shell_context(app)
 
+    migrate = Migrate(app, db)
+
     return app
 
 
 def register_blueprints(app):
     from app.auth import auth_bp
     app.register_blueprint(auth_bp)
+
+    from app.main import main_bp
+    app.register_blueprint(main_bp)
 
 
 def register_extensions(app):
@@ -41,5 +47,5 @@ def register_extensions(app):
 def register_shell_context(app):
     @app.shell_context_processor  # 要想进入shell时将对象自动导入列表中，必须用这个装饰器，注册一个shell上下文处理器
     def make_shell_context():
-        return dict(db=db, User=User)
+        return dict(db=db, User=User, Goods=Goods, Agent=Agent)
 

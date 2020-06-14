@@ -1,4 +1,4 @@
-from flask import g, request, jsonify, abort
+from flask import g, request, jsonify, abort, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
 from flask_restplus import Resource
 
@@ -29,13 +29,13 @@ def verify_password(email_or_token, password):
 class register(Resource):
     def post(self):
         """
-        用户注册界面的api
-        :你要给我的参数:
+        用户注册
+        :receive:
         email:邮箱
         password：密码
         name：用户名
 
-        :我给你的参数（return）:
+        :return:
         message：包含有没有注册成功的信息
         """
         email = request.values.get('email')  # 为什么要用values,不用json
@@ -59,6 +59,8 @@ class get_token(Resource):
     def post(self):
         """
         token登录，产生token的功能
+        :receive:
+        None
         :return:
         token：产生的token
         time：token有效的时间
@@ -71,4 +73,27 @@ class get_token(Resource):
             'message': 'ok'
         })
 
-# scp 文件名 远程主机用户名@liyafeng,com:/
+
+@api.route('/api/auth/login')
+class login(Resource):
+    """
+    登录
+    :receive:
+    email：邮箱
+    password：密码
+    """
+    def post(self):
+        email = request.values.get('email')
+        password = request.values.get('password')
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            return jsonify({
+                'message': '你的邮箱或者密码错误0！'
+            })
+        if user.verify_password(password) is False:
+            return jsonify({
+                'message': '你的邮箱或者密码错误1！'
+            })
+        return redirect(url_for('index'))
+
+
