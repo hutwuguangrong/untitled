@@ -1,9 +1,9 @@
-from flask import g, request, jsonify, abort, redirect, url_for, flash, render_template
+from flask import g, request, jsonify, abort, redirect, url_for, flash, render_template, make_response
 from flask_httpauth import HTTPBasicAuth
 from flask_restplus import Resource
 
-
 from app import api, db
+from . import auth_bp
 from ..models import User
 
 auth = HTTPBasicAuth()  # 这里面没有参数
@@ -25,6 +25,11 @@ def verify_password(email_or_token, password):
     return user.verify_password(password)
 
 
+@auth_bp.route('/api/auth/register')
+def register():
+    return render_template('login.html')
+
+
 @api.route('/api/auth/register')
 class register(Resource):
     def post(self):
@@ -35,7 +40,6 @@ class register(Resource):
         password：密码
         name：用户名
         :return:
-        message：包含有没有注册成功的信息
         """
         email = request.values.get('email')  # 为什么要用values,不用json
         password = request.values.get('password')
@@ -48,13 +52,6 @@ class register(Resource):
         db.session.commit()
         flash('注册成功！')
         return redirect(url_for('login'))
-
-    def get(self):
-        """
-        渲染注册页面
-        :return:
-        """
-        return render_template('register')
 
 
 @api.route('/token')
@@ -78,6 +75,11 @@ class get_token(Resource):
         })
 
 
+@auth_bp.route('/api/auth/login')
+def login():
+    return render_template('login.html')
+
+
 @api.route('/api/auth/login')
 class login(Resource):
     def post(self):
@@ -97,12 +99,5 @@ class login(Resource):
             flash('你的邮箱或者密码错误！')
             return redirect(url_for('login'))
         return redirect(url_for('index'))
-
-    def get(self):
-        """
-        渲染注册界面
-        :return:
-        """
-        return render_template('login.html')
 
 
