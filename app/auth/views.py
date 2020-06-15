@@ -1,4 +1,4 @@
-from flask import g, request, jsonify, abort, redirect, url_for
+from flask import g, request, jsonify, abort, redirect, url_for, flash, render_template
 from flask_httpauth import HTTPBasicAuth
 from flask_restplus import Resource
 
@@ -34,7 +34,6 @@ class register(Resource):
         email:邮箱
         password：密码
         name：用户名
-
         :return:
         message：包含有没有注册成功的信息
         """
@@ -43,14 +42,19 @@ class register(Resource):
         name = request.values.get('name')
         user = User(email=email, password=password, name=name)
         if User.query.filter_by(email=email).first() is not None:
-            return jsonify({
-                'message': '该邮箱已经注册!'
-            })
+            flash('该邮箱已经注册！')
+            return redirect(url_for('register'))
         db.session.add(user)
         db.session.commit()
-        return jsonify({
-            'message': '注册成功!'
-        })
+        flash('注册成功！')
+        return redirect(url_for('login'))
+
+    def get(self):
+        """
+        渲染注册页面
+        :return:
+        """
+        return render_template('register')
 
 
 @api.route('/token')
@@ -89,14 +93,16 @@ class login(Resource):
         email = request.values.get('email')
         password = request.values.get('password')
         user = User.query.filter_by(email=email).first()
-        if user is None:
-            return jsonify({
-                'message': '你的邮箱或者密码错误0！'
-            })
-        if user.verify_password(password) is False:
-            return jsonify({
-                'message': '你的邮箱或者密码错误1！'
-            })
+        if user is None or user.verify_password(password) is False:
+            flash('你的邮箱或者密码错误！')
+            return redirect(url_for('login'))
         return redirect(url_for('index'))
+
+    def get(self):
+        """
+        渲染注册界面
+        :return:
+        """
+        return render_template('login.html')
 
 
