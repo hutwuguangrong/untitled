@@ -1,0 +1,10 @@
+亲爱的 {{ user.name }},
+
+欢迎注册商品溯源系统!
+
+验证您的邮箱请点击下面的链接：
+
+{{ url_for('email_confirm', token=token, _external=True) }}
+
+
+提示：不是注册该应用的用户请忽略此邮件！

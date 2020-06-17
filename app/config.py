@@ -7,7 +7,17 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = 'gggjklsdjflsdjkf'
 
-    JSON_AS_ASCII = False  # jsonify返回中文
+    MAIL_SUBJECT = 'Register'  # 邮件的主题
+    MAIL_SERVER = 'smtp.qq.com'  # 邮件相关配置
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = '419259833@qq.com'
+    MAIL_PASSWORD = 'zcdphnwmtzuobhii'
+    MAIL_SENDER = '419259833@qq.com'
+    FLASK_MAIL_ADMIN = '419259833@qq.com'
+    FLASK_ADMIN = '419259833@qq.com'
+
+    JSON_AS_ASCII = False  # 使jsonify能返回中文
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 数据库配置
 
