@@ -67,7 +67,8 @@ class login(Resource):
             return make_response(jsonify(({'message': '您还没有验证邮箱，请验证邮箱再来登录！'})), 400)
         res = make_response(jsonify({'message': '登录成功！'}))
         res.status_code = 200
-        res.set_cookie(key='token',  value='', expires=36000)
+        token = generate_email_confirm_token(user)
+        res.set_cookie(key='token',  value=token, expires=36000)
         res.set_cookie(key='email', value=email, expires=36000)
         return res
 

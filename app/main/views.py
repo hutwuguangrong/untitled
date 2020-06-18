@@ -1,7 +1,15 @@
-from flask import jsonify, render_template, redirect
-from app.main import main_bp
+from flask import make_response, jsonify, request
+from flask_restplus import Resource
+
+from app import api
+from app.utils import verify_email_confirm_token
 
 
-@main_bp.route('/index')
-def index():
-        return jsonify({'message': '112'}), 200
+@api.route('/index')
+class index(Resource):
+        def get(self):
+                token = request.cookies.get('token', 'default1')
+                email = request.cookies.get('email', 'default2')
+                if email != verify_email_confirm_token(token):
+                        return make_response(jsonify({'message': '请登录后再来请求该接口！'}), 401)
+                return make_response(jsonify({'message': '成功！'}), 200)
