@@ -1,12 +1,7 @@
-from flask import jsonify
-from flask_restplus import Resource
-
-from app import api
+from flask import jsonify, render_template, redirect
+from app.main import main_bp
 
 
-@api.route('/index')
-class index(Resource):
-    def get(self):
-        return jsonify({
-            'message': '登录成功！！'
-        })
+@main_bp.route('/index')
+def index():
+        return jsonify({'message': '112'}), 200

@@ -11,7 +11,7 @@ def create_app(config_name=None):
 
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
-    app = Flask(__name__)  # flask的应用实例，所有的客户端请求都是这个实例处理
+    app = Flask(__name__, template_folder='static',static_folder='static', static_url_path='/static')  # flask的应用实例，所有的客户端请求都是这个实例处理
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
