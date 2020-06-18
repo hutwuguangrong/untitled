@@ -2,3 +2,4 @@ venv/*
 migrations/*
 app/data-dev.sqlite
 app/data-dev.sqlite.orig
+app/_pycache_
